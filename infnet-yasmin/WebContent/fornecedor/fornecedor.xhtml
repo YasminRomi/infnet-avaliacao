@@ -166,9 +166,9 @@
 													</p:column>
 													<p:column>
 														<p:selectOneMenu id="uf"
-															value="#{pessoaManagedBean.pessoa.uf}" required="true" requiredMessage="Selecione uma UF">
+															value="#{fornecedorManagedBean.fornecedor.endereco.uf}" required="true" requiredMessage="Selecione uma UF">
 															<f:selectItem itemLabel="Selecione..." />
-															<f:selectItems value="#{pessoaManagedBean.listaEstados}"
+															<f:selectItems value="#{fornecedorManagedBean.estados}"
 																var="uf" itemValue="#{uf}" itemLabel="#{uf.nome}" />
 														</p:selectOneMenu>
 													</p:column>

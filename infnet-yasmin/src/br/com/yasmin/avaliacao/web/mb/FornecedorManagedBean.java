@@ -9,10 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import br.com.yasmin.avaliacao.core.constante.Constante;
+import br.com.yasmin.avaliacao.core.constante.EstadosEnum;
+import br.com.yasmin.avaliacao.core.domain.Fornecedor;
 import br.com.yasmin.avaliacao.core.dto.EnderecoDTO;
 import br.com.yasmin.avaliacao.core.dto.FornecedorDTO;
-import br.com.yasmin.avaliacao.core.constante.Constante;
-import br.com.yasmin.avaliacao.core.domain.Fornecedor;
 import br.com.yasmin.avaliacao.core.exception.ApplicationException;
 import br.com.yasmin.avaliacao.core.resource.MessageBundle;
 import br.com.yasmin.avaliacao.web.controller.EnderecoController;
@@ -52,6 +53,9 @@ public class FornecedorManagedBean extends BasicManagedBean<Fornecedor> {
 	/** lista de enderecos. */
 	private List<EnderecoDTO> enderecos;
 	
+	/** estados */
+	private EstadosEnum[] estados;
+	
 	/** bundle. */
 	@Autowired
 	private MessageBundle bundle;
@@ -76,6 +80,7 @@ public class FornecedorManagedBean extends BasicManagedBean<Fornecedor> {
 
 		this.fornecedor = new FornecedorDTO();
 		this.setSelectedDataTableRowObject(new FornecedorDTO());
+		this.estados = EstadosEnum.values();
 
 		try {
 			this.fornecedores = this.fornecedorController.consultar(this.fornecedor);
@@ -324,6 +329,25 @@ public class FornecedorManagedBean extends BasicManagedBean<Fornecedor> {
 	 */
 	public void setEnderecos(final List<EnderecoDTO> enderecos) {
 		this.enderecos = enderecos;
+	}
+	
+	/**
+	 * Obtém estados
+	 * 
+	 * @return estados
+	 */
+	public EstadosEnum[] getEstados() {
+		return estados;
+	}
+	
+	/**
+	 * Define estados
+	 * 
+	 * @param estados
+	 *  		  estados
+	 */
+	public void setEstados(EstadosEnum[] estados) {
+		this.estados = estados;
 	}
 
 }
