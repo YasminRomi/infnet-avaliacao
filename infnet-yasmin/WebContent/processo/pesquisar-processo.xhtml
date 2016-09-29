@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	
+	<f:metadata>
+        <f:event type="preRenderComponent" listener="#{processoManagedBean.resetSelectedRow()}" />
+	</f:metadata>
+	
+	<ui:composition template="../templates/template.xhtml">	
+		<ui:define name="content">
+				
+			<div class="wrapper">
+				<div class="ui-grid ui-grid-responsive">
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-12">
+							<div class="wrapper">
+								<h:form id="frmPrincipal">
+									<p:panel id="basic1" header="Form">
+										<f:facet name="header">
+											<span class="fa fa-file-text-o"></span>
+	                                     Pesquisa de Processos                                               
+	                               		</f:facet>
+
+										<f:facet name="actions">
+											<p:commandButton icon="fa fa-plus-circle" id="incluir"
+												value="Incluir" action="#{processoManagedBean.incluir}"/>
+
+											<p:commandButton id="limpar" value="Limpar" immediate="true"
+												styleClass="ui-button-clean"
+												style="float: right; margin-right: 0;" 
+												process="nome"
+												action="#{processoManagedBean.limpar}"												
+												update=":frmPrincipal,dataTable,basic1">
+											</p:commandButton>
+										</f:facet>
+
+										<p:messages id="msgs" globalOnly="true" autoUpdate="true" closable="true" />
+
+										<p:panelGrid id="panelGridPesquisar" columns="2"
+											styleClass="form-wrapper"
+											style="max-width: 500px; margin: 0 auto 30px; border-spacing: 10px; border-collapse: separate;">
+											
+											<p:outputLabel for="dataRelato" value="Data de Relato: " />
+											<p:calendar id="dataRelato" value="#{processoManagedBean.processo.dataRelato}" pattern="MM/dd/yyyy HH:mm:ss" />
+											
+											<p:outputLabel value="" />
+											<p:commandButton id="pesquisar" value="Pesquisar"
+												action="#{processoManagedBean.pesquisar}"
+												style="float: right; margin-right: 0;"
+												process="panelGridPesquisar"
+												update=":frmPrincipal,msgs,dataTable" />
+										</p:panelGrid>
+
+										<h:panelGroup id="resultados">
+											<p:dataTable id="dataTable" var="item"
+												value="#{processoManagedBean.processos}"
+												widgetVar="dataTable" paginator="true" rows="10" rendered="#{processoManagedBean.renderizarDatatable()}"
+												paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+												emptyMessage="Nenhum resultado encontrado." 
+												selectionMode="single" selection="#{processoManagedBean.selectedDataTableRowObject}" rowKey="#{item.idProcesso}" >	
+																							
+												<f:facet name="{Exporters}">
+													<div class="ui-exporter">
+														<p:commandButton id="export-pdf"  ajax="false" icon="fa fa-file-pdf-o">
+															<pe:exporter type="pdf" target="dataTable" fileName="dataTable"  tableTitle="Relatório de Processos" />
+														</p:commandButton>
+
+														<p:commandButton id="export-excel" ajax="false"	icon="fa fa-file-excel-o">
+															<pe:exporter type="xlsx" target="dataTable" fileName="dataTable" tableTitle="Relatório de Processos" />
+														</p:commandButton>
+														
+												        <p:commandButton id="toggler" type="button" style="float:right" icon="fa fa-trello" />
+												        <p:columnToggler datasource="dataTable" trigger="toggler" />														
+													</div>
+												</f:facet>
+												<f:facet name="header">
+													<h2><h:outputText value="Resultados" /></h2>
+												</f:facet>
+												
+												<p:columnGroup type="header">
+													<p:row>
+														<p:column headerText="Fornecedor" />
+														<p:column headerText="Relato Fiscalização" />
+														<p:column headerText="Data Relato" />
+														<p:column headerText="Fiscal responsável" />
+													</p:row>
+												</p:columnGroup>
+												
+												<p:ajax event="rowSelect" listener="#{processoManagedBean.itemSelecionado}" update=":frmPrincipal,dataTable" />
+		
+												<p:column sortBy="#{item.fornecedor.razaoSocial}" filterBy="#{item.fornecedor.razaoSocial}" filterStyle="display: none;">
+													<h:outputText value="#{item.fornecedor.razaoSocial}" />
+												</p:column>
+												<p:column sortBy="#{item.relatoFiscalizacao}" filterBy="#{item.relatoFiscalizacao}" filterStyle="display: none;">
+													<h:outputText value="#{item.relatoFiscalizacao}" />
+												</p:column>
+												<p:column sortBy="#{item.dataRelato}" filterBy="#{item.dataRelato}" filterStyle="display: none;">
+													<h:outputText value="#{item.dataRelato}" />
+												</p:column>
+												<p:column sortBy="#{item.fiscalResponsavel}" filterBy="#{item.fiscalResponsavel}" filterStyle="display: none;">
+													<h:outputText value="#{item.fiscalResponsavel}" />
+												</p:column>
+											</p:dataTable>
+										</h:panelGroup>
+									</p:panel>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

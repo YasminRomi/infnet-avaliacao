@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	
+	<ui:composition template="../templates/template.xhtml">
+		<ui:define name="content">
+
+			<div class="wrapper">
+				<div class="ui-grid ui-grid-responsive">
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-12">
+							<div class="wrapper">
+								<h:form id="frmPrincipal" enctype="multipart/form-data">
+									<p:panel id="basic1">
+
+										<f:facet name="header">
+											<span class="fa fa-file-text-o"></span>
+	                                    Cadastrar Auto de Infracao                                             
+	                                	</f:facet>
+
+										<f:facet name="actions">
+											<p:commandButton id="salvar" value="Salvar"
+												icon="fa fa-floppy-o" action="#{autoDeInfracaoManagedBean.salvar}"
+												style="float: right; margin-right: 0;" ajax="false"		
+												process="@this" />
+
+											<p:commandButton id="excluir" icon="fa fa-times-circle"
+												value="Excluir" action="#{autoDeInfracaoManagedBean.excluir}"
+												immediate="true" process="@this"
+												rendered="#{autoDeInfracaoManagedBean.habilitarEstado}">
+												<p:confirm header="Exclusão" message="Confirma a Exclusão?"
+													icon="ui-icon-alert" />
+											</p:commandButton>
+
+											<p:confirmDialog global="true" showEffect="fade"
+												hideEffect="fade">
+												<p:commandButton value="Sim" type="button"
+													styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+												<p:commandButton value="Não" type="button"
+													styleClass="ui-confirmdialog-no" icon="fa fa-close" />
+											</p:confirmDialog>
+										</f:facet>
+
+										<p:messages id="msgs" showSummary="true" showDetails="false"
+											autoUpdate="true" closable="true" />
+
+										<p:fieldset legend="Informações" style="margin-bottom:20px;">
+											<p:panelGrid id="panelGridCadastroGeral"
+												styleClass="form-wrapper" style="max-width: 950px;">
+												<p:row>
+													<p:column>
+														<p:outputLabel for="gravidade" value="Gravidade: " />
+													</p:column>
+													<p:column>
+														<p:selectCheckboxMenu id="gravidade" value="#{autoDeInfracaoManagedBean.autoDeInfracao.gravidade}" label="Gravidade" 
+											                            filter="true" filterMatchMode="startsWith" panelStyle="width:250px" required="true" requiredMessage="Selecione uma gravidade">
+											            				<f:selectItem value="1" />
+											            				<f:selectItem value="2" />
+											            				<f:selectItem value="3" />
+											            </p:selectCheckboxMenu>
+													</p:column>
+												</p:row>
+												<p:row>
+													<p:column>
+														<p:outputLabel for="selectProcesso" value="Processo:" />
+													</p:column>
+													<p:column>
+														<p:selectOneMenu id="selectProcesso"
+															value="#{autoDeInfracaoManagedBean.autoDeInfracao.processo}"
+															style="min-width: 375px;" required="true" requiredMessage="Selecione um Processo" 
+															converter="#{ProcessoConverter}" items="#{autoDeInfracaoManagedBean.processos}" >
+															<f:selectItem itemLabel="Selecione" />
+															<f:selectItems value="#{autoDeInfracaoManagedBean.processos}"
+																var="processo" itemValue="#{processo}" itemLabel="#{processo.dataRelato} - #{processo.fornecedor.cnpj}" />
+														</p:selectOneMenu>
+													</p:column>
+												</p:row>
+
+												<p:row>
+													<p:column>
+														<p:outputLabel for="atenuante" value="Atenuante:" />
+													</p:column>
+													<p:column>
+														<p:selectBooleanCheckbox id="atenuante" value="#{autoDeInfracaoManagedBean.autoDeInfracao.atenuante}" />
+													</p:column>
+												</p:row>
+
+												<p:row>
+													<p:column>
+														<p:outputLabel for="agravante" value="Agravante: " />
+													</p:column>
+													<p:column>
+														<p:selectBooleanCheckbox id="agravante" value="#{autoDeInfracaoManagedBean.autoDeInfracao.agravante}" />
+													</p:column>
+												</p:row>
+
+												
+											</p:panelGrid>
+										</p:fieldset>
+										<p:commandButton id="voltar" value="Voltar" immediate="true"
+											styleClass="ui-button-cancel" style="float: right;"
+											action="#{autoDeInfracaoManagedBean.voltar}" />
+										<br />
+										<br />
+									</p:panel>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	
+	<f:metadata>
+        <f:event type="preRenderComponent" listener="#{fornecedorManagedBean.resetSelectedRow()}" />
+	</f:metadata>
+	
+	<ui:composition template="../templates/template.xhtml">	
+		<ui:define name="content">
+				
+			<div class="wrapper">
+				<div class="ui-grid ui-grid-responsive">
+					<div class="ui-grid-row">
+						<div class="ui-grid-col-12">
+							<div class="wrapper">
+								<h:form id="frmPrincipal">
+									<p:panel id="basic1" header="Form">
+										<f:facet name="header">
+											<span class="fa fa-file-text-o"></span>
+	                                     Pesquisa de Fornecedores                                               
+	                               		</f:facet>
+
+										<f:facet name="actions">
+											<p:commandButton icon="fa fa-plus-circle" id="incluir"
+												value="Incluir" action="#{fornecedorManagedBean.incluir}"/>
+
+											<p:commandButton id="limpar" value="Limpar" immediate="true"
+												styleClass="ui-button-clean"
+												style="float: right; margin-right: 0;" 
+												process="nome"
+												action="#{fornecedorManagedBean.limpar}"												
+												update=":frmPrincipal,dataTable,basic1">
+											</p:commandButton>
+										</f:facet>
+
+										<p:messages id="msgs" globalOnly="true" autoUpdate="true" closable="true" />
+
+										<p:panelGrid id="panelGridPesquisar" columns="2"
+											styleClass="form-wrapper"
+											style="max-width: 500px; margin: 0 auto 30px; border-spacing: 10px; border-collapse: separate;">
+											
+											<p:outputLabel for="cnpf" value="CNPJ: " />
+											<p:inputMask id="cnpj"
+															value="#{fornecedorManagedBean.fornecedor.cnpj}"
+															mask="?99.999.999/9999-99"  />
+											</p:selectOneMenu>
+
+											<p:outputLabel value="" />
+											<p:commandButton id="pesquisar" value="Pesquisar"
+												action="#{fornecedorManagedBean.pesquisar}"
+												style="float: right; margin-right: 0;"
+												process="panelGridPesquisar"
+												update=":frmPrincipal,msgs,dataTable" />
+										</p:panelGrid>
+
+										<h:panelGroup id="resultados">
+											<p:dataTable id="dataTable" var="item"
+												value="#{fornecedorManagedBean.fornecedores}"
+												widgetVar="dataTable" paginator="true" rows="10" rendered="#{fornecedorManagedBean.renderizarDatatable()}"
+												paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+												emptyMessage="Nenhum resultado encontrado." 
+												selectionMode="single" selection="#{fornecedorManagedBean.selectedDataTableRowObject}" rowKey="#{item.idFornecedor}" >	
+																							
+												<f:facet name="{Exporters}">
+													<div class="ui-exporter">
+														<p:commandButton id="export-pdf"  ajax="false" icon="fa fa-file-pdf-o">
+															<pe:exporter type="pdf" target="dataTable" fileName="dataTable"  tableTitle="Relatório de Fornecedores" />
+														</p:commandButton>
+
+														<p:commandButton id="export-excel" ajax="false"	icon="fa fa-file-excel-o">
+															<pe:exporter type="xlsx" target="dataTable" fileName="dataTable" tableTitle="Relatório de Fornecedores" />
+														</p:commandButton>
+														
+												        <p:commandButton id="toggler" type="button" style="float:right" icon="fa fa-trello" />
+												        <p:columnToggler datasource="dataTable" trigger="toggler" />														
+													</div>
+												</f:facet>
+												<f:facet name="header">
+													<h2><h:outputText value="Resultados" /></h2>
+												</f:facet>
+												
+												<p:columnGroup type="header">
+													<p:row>
+														<p:column headerText="CNPJ" />
+														<p:column headerText="Razao Social" />
+														<p:column headerText="Inscricao Municipal" />
+														<p:column headerText="Receita Bruta" />
+														<p:column headerText="Endereco" />
+													</p:row>
+												</p:columnGroup>
+												
+												<p:ajax event="rowSelect" listener="#{fornecedorManagedBean.itemSelecionado}" update=":frmPrincipal,dataTable" />
+		
+												<p:column sortBy="#{item.cnpj}" filterBy="#{item.cnpj}" filterStyle="display: none;">
+													<h:outputText value="#{item.cnpj}" />
+												</p:column>
+												<p:column sortBy="#{item.razaoSocial}" filterBy="#{item.razaoSocial}" filterStyle="display: none;">
+													<h:outputText value="#{item.razaoSocial}" />
+												</p:column>
+												<p:column sortBy="#{item.inscricaoMunicipal}" filterBy="#{item.inscricaoMunicipal}" filterStyle="display: none;">
+													<h:outputText value="#{item.inscricaoMunicipal}" />
+												</p:column>
+												<p:column sortBy="#{item.receitaBruta}" filterBy="#{item.receitaBruta}" filterStyle="display: none;">
+													<h:outputText value="#{item.receitaBruta}" >
+														<f:convertNumber type="currency" currencySymbol="R$" />
+													</h:outputText>
+												</p:column>
+												<p:column sortBy="#{item.endereco.idEndereco}" filterBy="#{item.endereco.idEndereco}" filterStyle="display: none;">
+													<h:outputText value="#{item.endereco.logradouro} - #{item.endereco.numero} - #{item.endereco.bairro} - #{item.endereco.uf}" />
+												</p:column>
+											</p:dataTable>
+										</h:panelGroup>
+									</p:panel>
+								</h:form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
